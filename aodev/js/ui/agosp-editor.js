@@ -2,7 +2,6 @@ agosp = this.agosp || {};
 agosp.ui = agosp.ui || {};
 
 agosp.ui.editor = (function(){
-
   var _initCodeMirror = function(id) {
     return CodeMirror.fromTextArea(id, {
       height: "280px",
@@ -11,18 +10,18 @@ agosp.ui.editor = (function(){
            path: "./lib/codemirror/",
            textWrapping: false,
            onChange: function() {
-             alert("ZMIANA");
+             now.sendCode({name: $('#user').val(), id: id, code: agosp.ui.editor.code.code() });
            }
+
     });
   };
 
-  var _createEditor = function(textAreaId){
+  var _createEditor = function(textAreaId) {
     var codemirror = _initCodeMirror(textAreaId);
     return {
       code: function(c) {
-              //return;
-              if(!c)
-  return codemirror.getCode();
+              if (c == codemirror.getCode()) return c;
+              if(!c) return codemirror.getCode();
               return codemirror.setCode(c);
             }
     };
@@ -37,6 +36,12 @@ agosp.ui.editor = (function(){
     agosp.ui.editor.code = _createEditor( 'code' );
     agosp.ui.editor.test = _createEditor( 'test' );
   });	
+
+  now.updateCode = function(msg) {
+    if (msg.name != $('#user').val()) {
+      agosp.ui.editor.code.code(msg.code);
+    }
+  }
 
   return editor;
 })();

@@ -10,5 +10,11 @@ server.listen 8124;
 everyone = now.initialize(server)
 everyone.now.distributeMessage=  (msg)->
   everyone.now.receiveMessage(msg.name, msg.message);
-everyone.now.sendCode= (code)->
-  everyone.now.updateCode(code)
+everyone.now.changeName = (old, name) ->
+  everyone.now.receiveMessage "system", "user #{old} is now known as #{name}"
+everyone.connected ->
+  everyone.now.receiveMessage('system', "user #{this.now.name} has connected");
+everyone.disconnected ->
+  everyone.now.receiveMessage('system', "user #{this.now.name} has disconnected")
+everyone.now.sendCode= (msg)->
+  everyone.now.updateCode(msg)
